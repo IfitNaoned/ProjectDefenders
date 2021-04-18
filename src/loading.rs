@@ -27,7 +27,7 @@ fn loading(
     if let LoadState::Loaded =
         asset_server.get_group_load_state(sprite_handles.handles.iter().map(|handle| handle.id))
     {
-        println!("loading 2");
+        println!("loading 1.1");
         for handle in sprite_handles.handles.iter() {
             let texture = textures.get(handle).unwrap();
             texture_atlas_builder.add_texture(handle.clone_weak().typed::<Texture>(), &texture);
