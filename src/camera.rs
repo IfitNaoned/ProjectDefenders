@@ -7,9 +7,9 @@ fn camera(
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
     println!("camera!");
-    // commands
-    //     .spawn()
-    //     .insert_bundle(OrthographicCameraBundle::new_2d());
+    commands
+        .spawn()
+        .insert_bundle(OrthographicCameraBundle::new_2d());
 
     // commands.spawn_bundle(PbrBundle {
     //     mesh: meshes.add(Mesh::from(shape::Cube { size: 1.0 })),

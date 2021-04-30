@@ -4,6 +4,7 @@ use bevy::prelude::*;
 pub enum AppState {
     Loading,
     StartMenu,
+    Generating,
     Game,
 }
 

@@ -168,7 +168,7 @@ fn start_game_button_system(
         match *interaction {
             Interaction::Clicked => {
                 *material = button_materials.pressed.clone();
-                state.set(AppState::Game).unwrap();
+                state.set(AppState::Generating).unwrap();
             }
             Interaction::Hovered => {
                 *material = button_materials.hovered.clone();
@@ -182,7 +182,6 @@ fn start_game_button_system(
 
 fn quit_game_button_system(
     button_materials: Res<ButtonMaterials>,
-    mut state: ResMut<State<AppState>>,
     mut app_exit_events: EventWriter<AppExit>,
     mut interaction_query: Query<
         (&Interaction, &mut Handle<ColorMaterial>),
