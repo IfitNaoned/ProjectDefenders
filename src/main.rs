@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_tilemap::prelude::*;
 
 mod app_state;
 use app_state::*;
@@ -28,6 +29,7 @@ fn main() {
             ..Default::default()
         })
         .add_plugins(DefaultPlugins)
+        .add_plugins(TilemapDefaultPlugins)
         .add_plugin(AppStatePlugin)
         .add_plugin(LoadingPlugin)
         .add_plugin(StartMenuPlugin)

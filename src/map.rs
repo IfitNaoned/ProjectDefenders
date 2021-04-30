@@ -19,7 +19,7 @@ pub fn spawn_map(
     atlas_texture.sampler.mag_filter = bevy::render::texture::FilterMode::Nearest;
     atlas_texture.sampler.mipmap_filter = bevy::render::texture::FilterMode::Nearest;
 
-    let texture_atlas = TextureAtlas::from_grid(tilemap_atlas_handle, Vec2::new(32.0, 37.0), 6, 16);
+    let texture_atlas = TextureAtlas::from_grid(tilemap_atlas_handle, Vec2::new(32.0, 37.0), 1, 1);
 
     let atlas_handle = texture_atlases.add(texture_atlas);
 
@@ -53,18 +53,13 @@ pub fn spawn_map(
 }
 
 pub fn generate_map(
-    asset_server: Res<AssetServer>,
     mut game_state: ResMut<State<AppState>>,
     mut tilemap_query: Query<&mut Tilemap>,
-    texture_atlases: Res<Assets<TextureAtlas>>,
 ) {
+    println!("map generation");
     for mut map in tilemap_query.iter_mut() {
         let chunk_width = (map.width().unwrap() * map.chunk_width()) as i32;
         let chunk_height = (map.height().unwrap() * map.chunk_height()) as i32;
-
-        let grass_floor: Handle<Texture> = asset_server.get_handle("textures/hex-floor-grass.png");
-        let texture_atlas = texture_atlases.get(map.texture_atlas()).unwrap();
-        let grass_index = texture_atlas.get_texture_index(&grass_floor).unwrap();
 
         let mut tiles = Vec::new();
         for y in 0..chunk_height {
@@ -73,12 +68,13 @@ pub fn generate_map(
                 let x = x - chunk_width / 2;
                 let tile = Tile {
                     point: (x, y),
-                    sprite_index: grass_index,
+                    sprite_index: 1, //TODO voir comment récuper les différents index des autres textures
                     ..Default::default()
                 };
                 tiles.push(tile);
             }
         }
+
         map.insert_tiles(tiles).unwrap();
 
         map.spawn_chunk((-1, 0)).unwrap();
@@ -106,7 +102,7 @@ impl Plugin for MapPlugin {
                 .label("spawn_map"),
         )
         .add_system_set(
-            SystemSet::on_enter(AppState::Generating)
+            SystemSet::on_update(AppState::Generating)
                 .with_system(generate_map.system())
                 .after("spawn_map"),
         );
