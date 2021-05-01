@@ -25,8 +25,7 @@ pub fn spawn_map(
 
     let tilemap = Tilemap::builder()
         .auto_chunk()
-        .auto_spawn(2, 2)
-        .topology(GridTopology::HexOddRows)
+        .topology(GridTopology::HexEvenRows)
         .dimensions(3, 3)
         .chunk_dimensions(7, 4, 1)
         .texture_dimensions(32, 37)
@@ -77,15 +76,15 @@ pub fn generate_map(
 
         map.insert_tiles(tiles).unwrap();
 
-        map.spawn_chunk((-1, 0)).unwrap();
-        map.spawn_chunk((0, 0)).unwrap();
-        map.spawn_chunk((1, 0)).unwrap();
-        map.spawn_chunk((-1, 1)).unwrap();
-        map.spawn_chunk((0, 1)).unwrap();
-        map.spawn_chunk((1, 1)).unwrap();
-        map.spawn_chunk((-1, -1)).unwrap();
-        map.spawn_chunk((0, -1)).unwrap();
-        map.spawn_chunk((1, -1)).unwrap();
+        // map.spawn_chunk((-1, 0)).unwrap();
+        // map.spawn_chunk((0, 0)).unwrap();
+        // map.spawn_chunk((1, 0)).unwrap();
+        // map.spawn_chunk((-1, 1)).unwrap();
+        // map.spawn_chunk((0, 1)).unwrap();
+        // map.spawn_chunk((1, 1)).unwrap();
+        // map.spawn_chunk((-1, -1)).unwrap();
+        // map.spawn_chunk((0, -1)).unwrap();
+        // map.spawn_chunk((1, -1)).unwrap();
     }
 
     println!("map generated");

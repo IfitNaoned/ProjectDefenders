@@ -1,15 +1,46 @@
 use crate::app_state::*;
 use bevy::prelude::*;
+use bevy_tilemap::prelude::*;
 
 fn camera(
+    asset_server: Res<AssetServer>,
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
+    mut tilemap_query: Query<&mut Tilemap>,
 ) {
     println!("camera!");
     commands
         .spawn()
         .insert_bundle(OrthographicCameraBundle::new_2d());
+
+    for mut map in tilemap_query.iter_mut() {
+        map.spawn_chunk((-1, 0)).unwrap();
+        map.spawn_chunk((0, 0)).unwrap();
+        map.spawn_chunk((1, 0)).unwrap();
+        map.spawn_chunk((-1, 1)).unwrap();
+        map.spawn_chunk((0, 1)).unwrap();
+        map.spawn_chunk((1, 1)).unwrap();
+        map.spawn_chunk((-1, -1)).unwrap();
+        map.spawn_chunk((0, -1)).unwrap();
+        map.spawn_chunk((1, -1)).unwrap();
+    }
+
+    // commands.spawn_bundle(Text2dBundle {
+    //     text: Text::with_section(
+    //         "This text is in the 2D scene.",
+    //         TextStyle {
+    //             font: asset_server.load::<Font, &'static str>("fonts/FiraMono-Medium.ttf"),
+    //             font_size: 60.0,
+    //             color: Color::WHITE,
+    //         },
+    //         TextAlignment {
+    //             vertical: VerticalAlign::Center,
+    //             horizontal: HorizontalAlign::Center,
+    //         },
+    //     ),
+    //     ..Default::default()
+    // });
 
     // commands.spawn_bundle(PbrBundle {
     //     mesh: meshes.add(Mesh::from(shape::Cube { size: 1.0 })),
