@@ -141,7 +141,7 @@ pub fn bevel_hexagon_points(points: &mut Vec<[f32; 3]>, radius: f32, factor: f32
     flat_hexagon_ring(points, radius, c, &offset);
 
     // Now, add points much lower, so we can create skirts so if hexagons are offset we don't see gaps
-    let offset = [0., -0.5, 0.];
+    let offset = [0., -1., 0.];
     // Add skirts
     flat_hexagon_ring(points, radius, c, &offset);
 }
@@ -179,12 +179,12 @@ pub fn bevel_hexagon_indices(idx: &mut Vec<u32>) {
     // First, fill indices with the flat top hexagon
     flat_hexagon_indices(idx);
 
-    // Add slopes
+    //Add slopes
     for i in 0..=6 {
         // Insert a quad, using the inner beveled hex, and the outer sloped hex
         quad_indices(idx, i + 1, i + 2, i + 8, i + 9);
     }
-    // Add a skirt
+    // // Add a skirt
     for i in 0..=6 {
         // Insert a quad using the outer sloped hex and the bottom base hex
         quad_indices(idx, i + 8, i + 9, i + 15, i + 16);

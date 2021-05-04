@@ -32,7 +32,7 @@ fn generate_map(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
-    let height = 0.1;
+    let height = 0.0;
     let mesh = meshes.add(generate_hex_mesh());
 
     for q in -5..5 {
@@ -65,7 +65,7 @@ fn add_hex(
             transform: Transform::from_translation(position),
             ..Default::default()
         })
-        //.insert_bundle(PickableBundle::default())
+        // .insert_bundle(PickableBundle::default())
         .insert(Tile)
         .insert(RenderLayers::layer(DEBUG_LAYER));
 }
