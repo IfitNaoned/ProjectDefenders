@@ -205,7 +205,6 @@ fn quit_game_button_system(
 }
 
 fn exit_ui_despawn(mut commands: Commands, query: Query<Entity, With<WillDestroy>>) {
-    println!("despawn!");
     for entity in query.iter() {
         commands.entity(entity).despawn_recursive();
     }

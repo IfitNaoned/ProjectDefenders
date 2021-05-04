@@ -12,7 +12,12 @@
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
-            "environment": [],
+            "environment": [
+                {
+                    "name": "CARGO_MANIFEST_DIR",
+                    "value": "${workspaceFolder}"
+                }
+            ],
             "console": "externalTerminal"
         }
     ]

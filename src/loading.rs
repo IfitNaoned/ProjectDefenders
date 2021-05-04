@@ -1,50 +1,39 @@
 use crate::app_state::*;
-use crate::map::*;
+
 use bevy::asset::LoadState;
 use bevy::prelude::*;
+
+#[derive(Default, Clone)]
+pub struct TexturesAtlasHandles {
+    handles: Vec<HandleUntyped>,
+}
 
 pub fn loading(
     asset_server: Res<AssetServer>,
     mut state: ResMut<State<AppState>>,
-    tilemap_atlas_handles: Res<TilemapAtlasHandles>,
-    textures: Res<Assets<Texture>>,
+    textures_atlas_handles: Res<TexturesAtlasHandles>,
 ) {
-    let mut isloaded = false;
-    asset_server.load::<Font, &'static str>("fonts/FiraMono-Medium.ttf");
-
-    if asset_server.get_group_load_state(textures.iter().map(|(handle_id, _)| handle_id))
-        == LoadState::Loaded
-        && get_has_map_assets(asset_server, tilemap_atlas_handles)
-    {
-        isloaded = true;
-    }
-
-    if isloaded {
-        println!("textures loaded");
+    if let LoadState::Loaded = asset_server.get_group_load_state(
+        textures_atlas_handles
+            .handles
+            .iter()
+            .map(|handle| handle.id),
+    ) {
         state.set(AppState::StartMenu).unwrap();
     }
 }
 
 pub fn load_textures(
     asset_server: Res<AssetServer>,
-    mut tilemap_atlas_handles: ResMut<TilemapAtlasHandles>,
+    mut tilemap_atlas_handles: ResMut<TexturesAtlasHandles>,
 ) {
-    println!("load_textures");
     tilemap_atlas_handles.handles = asset_server.load_folder("textures").unwrap();
-}
-
-fn get_has_map_assets(
-    asset_server: Res<AssetServer>,
-    tilemap_atlas_handles: Res<TilemapAtlasHandles>,
-) -> bool {
-    asset_server.get_group_load_state(tilemap_atlas_handles.handles.iter().map(|handle| handle.id))
-        == LoadState::Loaded
 }
 
 pub struct LoadingPlugin;
 impl Plugin for LoadingPlugin {
     fn build(&self, app: &mut AppBuilder) {
-        app.init_resource::<TilemapAtlasHandles>()
+        app.init_resource::<TexturesAtlasHandles>()
             .add_system_set(
                 SystemSet::on_enter(AppState::Loading).with_system(load_textures.system()),
             )

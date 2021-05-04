@@ -7,5 +7,8 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bevy = { version = "0.5", features = ["dynamic"] }
-bevy_tilemap = "0.4"
+#bevy = { version = "0.5", features = ["dynamic"] }
+bevy = "0.5"
+bevy_mod_picking = "0.4"
+
+
