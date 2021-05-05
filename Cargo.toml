@@ -10,5 +10,6 @@ edition = "2018"
 #bevy = { version = "0.5", features = ["dynamic"] }
 bevy = "0.5"
 bevy_mod_picking = "0.4"
+rand = "0.8.0"
 
 

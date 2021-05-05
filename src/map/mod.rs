@@ -13,8 +13,7 @@ pub static MAP_SIZE: isize = 21;
 pub struct Tile {
     pub position: Vec3,
     pub is_center: bool,
-    q: isize,
-    r: isize,
+    pub is_frontier: bool,
 }
 
 impl Tile {
@@ -22,23 +21,22 @@ impl Tile {
         let pos = geometry::center(
             1.0,
             &hex::HexCoord::new(q, r),
-            &[
-                -1.65 * (MAP_SIZE as f32) / 2.,
-                -0.5,
-                -1.4325 * (MAP_SIZE as f32) / 2.,
-            ],
+            &[-1.65 * (MAP_SIZE as f32) / 2., 0., -(MAP_SIZE as f32) / 2.],
         );
 
         let mut is_center = false;
+        let mut is_frontier = false;
+
         if r == MAP_SIZE / 2 && q == MAP_SIZE / 2 {
             is_center = true;
+        } else if r == 0 || q == 0 || r == MAP_SIZE || q == MAP_SIZE {
+            is_frontier = true;
         }
 
         Self {
             position: Vec3::new(pos[0], pos[1], pos[2]),
             is_center,
-            q,
-            r,
+            is_frontier,
         }
     }
 }

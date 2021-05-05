@@ -25,6 +25,7 @@ fn main() {
         .add_plugin(app_state::AppStatePlugin)
         .add_plugin(loading::LoadingPlugin)
         .add_plugin(start_menu::StartMenuPlugin)
+        .add_plugin(building::black_road::BlackRoadPlugin)
         .add_plugin(building::sacred_brazier::SacredBrazierPlugin)
         .add_plugin(map::MapPlugin)
         .add_plugin(camera::CameraPlugin)

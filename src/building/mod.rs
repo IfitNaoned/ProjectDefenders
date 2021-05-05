@@ -1,3 +1,4 @@
+pub mod black_road;
 pub mod sacred_brazier;
 
 #[derive(Default)]

@@ -17,7 +17,7 @@ fn spawn_sacred_brazier(
     if let Some(tile) = tiles_query.iter().find(|tile| tile.is_center) {
         commands
             .spawn_bundle(PbrBundle {
-                mesh: meshes.add(Mesh::from(shape::Cube { size: 1.0 })),
+                mesh: meshes.add(Mesh::from(shape::Cube { size: 1. })),
                 material: materials.add(Color::rgb(0.8, 0.7, 0.6).into()),
                 transform: Transform::from_translation(tile.position + Vec3::new(0., 0.5, 0.)),
                 ..Default::default()
