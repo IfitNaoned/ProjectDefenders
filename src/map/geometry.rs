@@ -185,8 +185,8 @@ pub fn bevel_hexagon_indices(idx: &mut Vec<u32>) {
         quad_indices(idx, i + 1, i + 2, i + 8, i + 9);
     }
     // // Add a skirt
-    for i in 0..=6 {
-        // Insert a quad using the outer sloped hex and the bottom base hex
-        quad_indices(idx, i + 8, i + 9, i + 15, i + 16);
-    }
+    // for i in 0..=6 {
+    //     // Insert a quad using the outer sloped hex and the bottom base hex
+    //     quad_indices(idx, i + 8, i + 9, i + 15, i + 16);
+    // }
 }

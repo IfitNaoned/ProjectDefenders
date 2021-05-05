@@ -1,5 +1,5 @@
-use crate::app_state::*;
 use crate::layers::*;
+use crate::{app_state::*, map::MAP_SIZE};
 use bevy::prelude::*;
 use bevy::render::camera::Camera;
 use bevy::render::camera::RenderLayers;
@@ -8,14 +8,19 @@ use bevy_mod_picking::*;
 fn camera(mut commands: Commands) {
     commands
         .spawn_bundle(PerspectiveCameraBundle {
-            transform: Transform::from_xyz(0., 15., 10.).looking_at(Vec3::ZERO, Vec3::Y),
+            transform: Transform::from_xyz(0., MAP_SIZE as f32, MAP_SIZE as f32)
+                .looking_at(Vec3::ZERO, Vec3::Y),
             ..Default::default()
         })
         .insert_bundle(PickingCameraBundle::default())
-        .insert(RenderLayers::layer(DEBUG_LAYER).with(TILE_LAYER));
+        .insert(
+            RenderLayers::layer(DEBUG_LAYER)
+                .with(TILE_LAYER)
+                .with(GAME_ENTITY_LAYER),
+        );
 
     commands.spawn_bundle(LightBundle {
-        transform: Transform::from_translation(Vec3::new(4.0, 8.0, 4.0)),
+        transform: Transform::from_translation(Vec3::new(0., 7.0, 2.)),
         ..Default::default()
     });
 }

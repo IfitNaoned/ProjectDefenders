@@ -7,7 +7,41 @@ use bevy_mod_picking::*;
 mod geometry;
 mod hex;
 
-pub struct Tile;
+pub static MAP_SIZE: isize = 21;
+
+#[derive(Default, Debug)]
+pub struct Tile {
+    pub position: Vec3,
+    pub is_center: bool,
+    q: isize,
+    r: isize,
+}
+
+impl Tile {
+    pub fn new(q: isize, r: isize) -> Self {
+        let pos = geometry::center(
+            1.0,
+            &hex::HexCoord::new(q, r),
+            &[
+                -1.65 * (MAP_SIZE as f32) / 2.,
+                -0.5,
+                -1.4325 * (MAP_SIZE as f32) / 2.,
+            ],
+        );
+
+        let mut is_center = false;
+        if r == MAP_SIZE / 2 && q == MAP_SIZE / 2 {
+            is_center = true;
+        }
+
+        Self {
+            position: Vec3::new(pos[0], pos[1], pos[2]),
+            is_center,
+            q,
+            r,
+        }
+    }
+}
 
 pub struct TileMaterials {
     pub selected_color: Handle<StandardMaterial>,
@@ -32,14 +66,13 @@ fn generate_map(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
-    let height = 0.0;
     let mesh = meshes.add(generate_hex_mesh());
 
-    for q in -5..5 {
-        for r in -5..5 {
-            let pos = geometry::center(1.0, &hex::HexCoord::new(q, r), &[0., height, 0.]);
+    for q in 0..MAP_SIZE {
+        for r in 0..MAP_SIZE {
             add_hex(
-                Vec3::new(pos[0], pos[1], pos[2]),
+                q,
+                r,
                 Color::rgb(0.698, 0.941, 0.329),
                 mesh.clone(),
                 &mut commands,
@@ -52,21 +85,24 @@ fn generate_map(
 }
 
 fn add_hex(
-    position: Vec3,
+    q: isize,
+    r: isize,
     color: Color,
     mesh: Handle<Mesh>,
     commands: &mut Commands,
     materials: &mut ResMut<Assets<StandardMaterial>>,
 ) {
+    let tile = Tile::new(q, r);
+
     commands
         .spawn_bundle(PbrBundle {
             mesh,
             material: materials.add(color.into()),
-            transform: Transform::from_translation(position),
+            transform: Transform::from_translation(tile.position),
             ..Default::default()
         })
-        // .insert_bundle(PickableBundle::default())
-        .insert(Tile)
+        .insert_bundle(PickableBundle::default())
+        .insert(tile)
         .insert(RenderLayers::layer(DEBUG_LAYER));
 }
 
@@ -94,11 +130,61 @@ fn generate_hex_mesh() -> Mesh {
     mesh
 }
 
+#[derive(Default)]
+struct SelectedTile {
+    entity: Option<Entity>,
+}
+
+fn tile_selection(
+    mouse_button_inputs: Res<Input<MouseButton>>,
+    mut selected_tile: ResMut<SelectedTile>,
+    picking_camera_query: Query<&PickingCamera>,
+    tiles_query: Query<&Tile>,
+) {
+    if !mouse_button_inputs.just_pressed(MouseButton::Left) {
+        return;
+    }
+
+    if let Some(picking_camera) = picking_camera_query.iter().last() {
+        if let Some((tile_entity, _intersection)) = picking_camera.intersect_top() {
+            if let Ok(tile) = tiles_query.get(tile_entity) {
+                selected_tile.entity = Some(tile_entity);
+            }
+        } else {
+            selected_tile.entity = None;
+        }
+    }
+}
+
+fn on_tile_selection(
+    selected_tile: Res<SelectedTile>,
+    materials: Res<TileMaterials>,
+    mut query: Query<(Entity, &mut Handle<StandardMaterial>)>,
+) {
+    if !selected_tile.is_changed() {
+        return;
+    }
+
+    for (entity, mut material) in query.iter_mut() {
+        if Some(entity) == selected_tile.entity {
+            *material = materials.selected_color.clone()
+        }
+    }
+}
+
 pub struct MapPlugin;
 impl Plugin for MapPlugin {
     fn build(&self, app: &mut AppBuilder) {
-        app.init_resource::<TileMaterials>().add_system_set(
-            SystemSet::on_enter(AppState::Generating).with_system(generate_map.system()),
-        );
+        app.init_resource::<TileMaterials>()
+            .init_resource::<SelectedTile>()
+            .add_system_set(
+                SystemSet::on_enter(AppState::Generating).with_system(generate_map.system()),
+            )
+            .add_system_set(
+                SystemSet::on_update(AppState::Game).with_system(tile_selection.system()),
+            )
+            .add_system_set(
+                SystemSet::on_update(AppState::Game).with_system(on_tile_selection.system()),
+            );
     }
 }

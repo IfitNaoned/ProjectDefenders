@@ -2,11 +2,11 @@ use bevy::prelude::*;
 use bevy_mod_picking::*;
 
 mod app_state;
+mod building;
 mod camera;
 mod layers;
 mod loading;
 mod map;
-mod player;
 mod start_menu;
 
 fn main() {
@@ -25,7 +25,7 @@ fn main() {
         .add_plugin(app_state::AppStatePlugin)
         .add_plugin(loading::LoadingPlugin)
         .add_plugin(start_menu::StartMenuPlugin)
-        .add_plugin(player::PlayerPlugin)
+        .add_plugin(building::sacred_brazier::SacredBrazierPlugin)
         .add_plugin(map::MapPlugin)
         .add_plugin(camera::CameraPlugin)
         .run();
